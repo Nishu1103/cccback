@@ -1,5 +1,13 @@
 const express = require("express");
-const { createLead, convertToClient, getAllLeads, updateLead, deleteLead } = require("../controllers/leadController");
+const {
+  createLead,
+  convertToClient,
+  getAllLeads,
+  updateLead,
+  deleteLead,
+  
+
+} = require("../controllers/leadController");
 const router = express.Router();
 
 // Create a new lead
@@ -16,5 +24,7 @@ router.put("/update/:id", updateLead);
 
 // Delete a lead
 router.delete("/delete/:id", deleteLead);
+
+ 
 
 module.exports = router;

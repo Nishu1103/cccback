@@ -13,7 +13,6 @@ exports.createLead = async (req, res) => {
   }
 };
 
-// Fetch all leads
 exports.getAllLeads = async (req, res) => {
   try {
     const leads = await Lead.find();
@@ -33,6 +32,7 @@ exports.convertToClient = async (req, res) => {
       name: lead.name,
       contactDetails: lead.contactNumber,
       email: lead.email,
+      isLeadConverted: true,
       // sourceOfConnection: lead.sourceOfConnection,
       priority: req.body.priority,
     });

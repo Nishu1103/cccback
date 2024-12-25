@@ -7,7 +7,7 @@ const clientSchema = new mongoose.Schema({
   email: { type: String, required: true },
   kindOfBusiness: { type: String},
   requirement: { type: String},
-  minimumArea: { type: Number},
+  minimumArea: { type: String },
   city: { type: String },
   preferredArea: { type: String },
   otherPreferredAreas: { type: String },
@@ -17,6 +17,7 @@ const clientSchema = new mongoose.Schema({
   linkedProperties: [{ type: mongoose.Schema.Types.ObjectId, ref: "Property" }],
   opportunities: [{ type: mongoose.Schema.Types.ObjectId, ref: "Opportunity" }],
   isRead: { type: Boolean, default: false },
+  isLeadConverted: { type: Boolean, default: false },
 });
 
 

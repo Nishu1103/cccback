@@ -114,10 +114,7 @@ router.put("/:id/follow-ups", async (req, res) => {
       { $set: { followUps: followUps } },
       { new: true }
     );
-
-    if (status) {
-      opportunity.status = status;  
-    }
+ 
 
     if (!opportunity) {
       return res.status(404).json({ message: "Opportunity not found" });

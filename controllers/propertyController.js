@@ -68,7 +68,9 @@ exports.getAllProperties = async (req, res) => {
 // Get Single Property by ID
 exports.getPropertyById = async (req, res) => {
   try {
-    const property = await Property.findById(req.params.id);
+    const property = await Property.findById(req.params.id)
+      .populate("linkedClients")
+      .populate("opportunities");
     if (!property) {
       return res.status(404).json({ success: false, error: "Property not found" });
     }

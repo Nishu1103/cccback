@@ -108,12 +108,16 @@ router.get("/:id", async (req, res) => {
 
 router.put("/:id/follow-ups", async (req, res) => {
   try {
-    const { followUps } = req.body; // Array of follow-up objects
+    const { followUps } = req.body;  
     const opportunity = await Opportunity.findByIdAndUpdate(
       req.params.id,
       { $set: { followUps: followUps } },
       { new: true }
     );
+
+    if (status) {
+      opportunity.status = status;  
+    }
 
     if (!opportunity) {
       return res.status(404).json({ message: "Opportunity not found" });

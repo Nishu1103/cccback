@@ -7,13 +7,11 @@ const {
   deleteClient,
   getClient,
   viewClient,
-  linkPropertiesToClient, // Import the new controller
+  
 } = require("../controllers/clientController");
 const authMiddleware = require("../middlewares/authMiddleware");
 
 const router = express.Router();
-
-// Create a new client
 router.post("/", authMiddleware, createClient);
 
 // Get all clients
@@ -26,7 +24,7 @@ router.put("/:id", authMiddleware, updateClient);
 router.put("/:clientId/assign", authMiddleware, assignClient); // Assign a client to employee (based on clientId and employeeId)
 -
 // Link multiple properties to a client
-router.put("/link-properties", authMiddleware, linkPropertiesToClient); // New route to link properties
+// router.put("/link-properties", authMiddleware, linkPropertiesToClient); // New route to link properties
 
 // Delete a client by ID
 router.delete("/:id", authMiddleware, deleteClient);

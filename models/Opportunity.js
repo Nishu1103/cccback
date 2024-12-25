@@ -4,32 +4,34 @@ const opportunitySchema = new mongoose.Schema({
   client: { type: mongoose.Schema.Types.ObjectId, ref: "Client", required: true },
   property: { type: mongoose.Schema.Types.ObjectId, ref: "Property", required: true },
 
-  // Status progression
+ 
   status: {
     type: String,
     enum: ["Hold", "Follow Up", "Reject", "Approved", "LOI", "Agreement"],
     default: "Hold",
   },
 
-  // Follow-up Date (new field)
+  
   followUps: [
     {
-      status: { type: String, enum: ["Cold", "Hot", "Approved"], required: true },
-      date: { type: Date, required: true }, // Follow-up date
+      status: { type: String, enum: ["Hold", "Follow Up", "Reject", "Approved"], default: "Hold" },
+      date: { type: Date, required: true },  
       remarks: { type: String },
     },
   ],
 
-  // Site Visit Management
+ 
   siteVisits: [
     {
       date: { type: Date }, // Site visit date
       response: { type: String, enum: ["Hold", "Follow Up", "Reject", "Approved"] }, // Site visit response
-      remarks: { type: String }, // Remarks for site visit
+      remarks: { type: String },  
+      // status: { type: String, default: "Pending" }
+
     },
   ],
 
-  // LOA (Letter of Agreement) Details
+ 
   loaDetails: {
     dateOfLOI: { type: Date },
     lockinPeriod: { type: String, enum: ["1 yr", "2 yr", "3 yr", "4 yr", "5 yr"] },
@@ -42,7 +44,7 @@ const opportunitySchema = new mongoose.Schema({
   agreementDetails: {
     date: { type: Date },
     rental: { type: Number },
-    image: { type: String }, // Agreement image path
+    image: { type: String },  
   },
 
   createdAt: { type: Date, default: Date.now },

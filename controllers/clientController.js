@@ -36,12 +36,16 @@ exports.getClient = async (req, res) => {
 // Get all clients
 exports.getAllClients = async (req, res) => {
   try {
-    const clients = await Client.find().populate("assignedTo", "name email role"); // Populating employee details
+    const clients = await Client.find()
+      .populate("assignedTo", "name email role") // Populating employee details
+      .populate("linkedProperties"); // Populating full details of linked properties
+
     res.status(200).json({ success: true, data: clients });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
   }
 };
+
 
 // Update client by ID
 exports.updateClient = async (req, res) => {
@@ -158,53 +162,53 @@ exports.viewClient = async (req, res) => {
 };
 
 
-exports.linkPropertiesToClient = async (req, res) => {
-  const { clientId, propertyIds } = req.body;
+// exports.linkPropertiesToClient = async (req, res) => {
+//   const { clientId, propertyIds } = req.body;
 
-  // Validate IDs
-  if (!mongoose.Types.ObjectId.isValid(clientId)) {
-    return res.status(400).json({ success: false, error: "Invalid client ID" });
-  }
+//   // Validate IDs
+//   if (!mongoose.Types.ObjectId.isValid(clientId)) {
+//     return res.status(400).json({ success: false, error: "Invalid client ID" });
+//   }
 
-  if (!Array.isArray(propertyIds) || propertyIds.some(id => !mongoose.Types.ObjectId.isValid(id))) {
-    return res.status(400).json({ success: false, error: "Invalid property IDs" });
-  }
+//   if (!Array.isArray(propertyIds) || propertyIds.some(id => !mongoose.Types.ObjectId.isValid(id))) {
+//     return res.status(400).json({ success: false, error: "Invalid property IDs" });
+//   }
 
-  try {
-    // Check if the client exists
-    const client = await Client.findById(clientId);
-    if (!client) {
-      return res.status(404).json({ success: false, error: "Client not found" });
-    }
+//   try {
+//     // Check if the client exists
+//     const client = await Client.findById(clientId);
+//     if (!client) {
+//       return res.status(404).json({ success: false, error: "Client not found" });
+//     }
 
-    // Find all valid properties
-    const properties = await Property.find({ _id: { $in: propertyIds } });
-    if (properties.length === 0) {
-      return res.status(404).json({ success: false, error: "No properties found with provided IDs" });
-    }
+//     // Find all valid properties
+//     const properties = await Property.find({ _id: { $in: propertyIds } });
+//     if (properties.length === 0) {
+//       return res.status(404).json({ success: false, error: "No properties found with provided IDs" });
+//     }
 
-    // Link properties to the client
-    const propertyIdsSet = new Set(properties.map(property => property._id.toString()));
-    client.linkedProperties = Array.from(new Set([...client.linkedProperties, ...propertyIdsSet]));
+//     // Link properties to the client
+//     const propertyIdsSet = new Set(properties.map(property => property._id.toString()));
+//     client.linkedProperties = Array.from(new Set([...client.linkedProperties, ...propertyIdsSet]));
 
-    // Link the client to each property
-    await Promise.all(
-      properties.map(async property => {
-        if (!property.linkedClients.includes(clientId)) {
-          property.linkedClients.push(clientId);
-          await property.save();
-        }
-      })
-    );
+//     // Link the client to each property
+//     await Promise.all(
+//       properties.map(async property => {
+//         if (!property.linkedClients.includes(clientId)) {
+//           property.linkedClients.push(clientId);
+//           await property.save();
+//         }
+//       })
+//     );
 
-    // Save the updated client
-    await client.save();
+//     // Save the updated client
+//     await client.save();
 
-    await createNotification("Client", "Linked", client._id, client.name);
+//     await createNotification("Client", "Linked", client._id, client.name);
 
-    res.status(200).json({ success: true, message: "Properties linked to client successfully", data: client });
-  } catch (error) {
-    console.error("Error linking properties to client:", error);
-    res.status(500).json({ success: false, error: "Server error" });
-  }
-};
+//     res.status(200).json({ success: true, message: "Properties linked to client successfully", data: client });
+//   } catch (error) {
+//     console.error("Error linking properties to client:", error);
+//     res.status(500).json({ success: false, error: "Server error" });
+//   }
+// };

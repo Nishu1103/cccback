@@ -40,13 +40,13 @@ const opportunitySchema = new mongoose.Schema({
     image: { type: String }, // LOI image path
   },
 
-  // Agreement Details
   agreementDetails: {
     date: { type: Date },
     rental: { type: Number },
     image: { type: String },  
   },
 
+  
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },
 });

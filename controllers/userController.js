@@ -5,14 +5,14 @@ const createNotification = require("../utils/notification");
 // Super Admin and Manager can add employees
 exports.addEmployee = async (req, res) => {
   try {
-    const { name, email, phone, password } = req.body;
+    const { name, email, phone, password , role } = req.body;
 
-    // // Authorization check
-    // if (req.user.role !== "Super Admin" && req.user.role !== "Manager") {
-    //   return res.status(403).json({ message: "Access denied." });
-    // }
+    // Authorization check
+    if (req.user.role !== "Super Admin" && req.user.role !== "Manager") {
+      return res.status(403).json({ message: "Access denied." });
+    }
 
-    // Check if email already exists
+  
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(400).json({ success: false, message: "Email already exists." });
@@ -24,11 +24,8 @@ exports.addEmployee = async (req, res) => {
       email,
       phone,
       password,
-      role: "Employee", // Default role
+      role
     });
-
-
-
 
     await createNotification("Employee", "Created", user._id, user.name);
 
@@ -43,11 +40,11 @@ exports.addEmployee = async (req, res) => {
 exports.getAllEmployees = async (req, res) => {
   try {
     // Authorization check
-    // if (req.user.role !== "Super Admin" && req.user.role !== "Manager") {
-    //   return res.status(403).json({ message: "Access denied." });
-    // }
+    if (req.user.role !== "Super Admin" && req.user.role !== "Manager") {
+      return res.status(403).json({ message: "Access denied." });
+    }
 
-    const employees = await User.find({ role: "Employee" })
+    const employees = await User.find()
     .populate("assignedClients", "name email contactDetails");
 
     if (employees.length === 0) {
@@ -79,7 +76,22 @@ exports.getEmployeeById = async (req, res) => {
         } catch (error) {
           res.status(500).json({ success: false, error: error.message });
         }
-        };
+ };
 
+
+exports.getProfile = async (req, res) => {
+          const user = await User.findById(req.user.id).populate("assignedClients");
+          res.json({
+            name: user.name,
+            email: user.email,
+            role: user.role,
+            status: user.status,
+            city: user.city,
+            profilePicture: user.profilePicture,
+            tasks: user.assignedTasks,
+            clients: user.assignedClients,
+          });
+  };
+        
 
 

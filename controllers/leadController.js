@@ -1,6 +1,7 @@
 const Lead = require("../models/Lead");
 const Client = require("../models/Client");
 const  createNotification = require("../utils/notification");
+const User = require("../models/User");
 
 // Create a new lead
 exports.createLead = async (req, res) => {
@@ -25,6 +26,12 @@ exports.getAllLeads = async (req, res) => {
 // Convert lead to client
 exports.convertToClient = async (req, res) => {
   try {
+
+        // Authorization check
+        if (req.user.role !== "Super Admin" && req.user.role !== "Manager" && req.user.role !== "BO-Client" && req.user.role !== "FE-Property") {
+          return res.status(403).json({ message: "Access denied." });
+        }
+
     const lead = await Lead.findById(req.params.id);
     if (!lead) return res.status(404).json({ success: false, message: "Lead not found" });
 

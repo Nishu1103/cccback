@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 
+
 const userSchema = new mongoose.Schema(
   {
     name: { type: String, required: true },
@@ -10,15 +11,27 @@ const userSchema = new mongoose.Schema(
     assignedClients: [{ type: mongoose.Schema.Types.ObjectId, ref: "Client" }],
     role: {
       type: String,
-      enum: ["Super Admin", "Manager", "Employee"],
-      default: "Employee", // Default role
+      enum: ["Super Admin", "Manager", "FE-Property", "BO-Client", "BO-Lead" ],
+      default: "BO-Lead",
     },
+    status: {
+      type: String,
+      enum: ["Active", "Inactive"],
+      default: "Active",
+    },
+    profilePicture: {
+      type: String,
+      default: "",
+      },
+    city: {
+      type: String,
+      default: "",
+      },    
   },
   
   { timestamps: true }
 );
 
-// Hash the password before saving
 userSchema.pre("save", async function (next) {
   if (!this.isModified("password")) return next();
   const salt = await bcrypt.genSalt(10);

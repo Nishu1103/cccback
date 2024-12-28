@@ -7,8 +7,8 @@ const opportunitySchema = new mongoose.Schema({
  
   status: {
     type: String,
-    enum: ["Hold", "Follow Up", "Reject", "Approved", "LOI", "Agreement"],
-    default: "Hold",
+    enum: ["Hold", "Follow Up", "Reject", "Approved", "LOI", "Agreement" ,"Pending" ],
+    default: "Pending",
   },
 
   
